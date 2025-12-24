@@ -1,0 +1,44 @@
+name: jongtas
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./backend:/backend"
+    depends_on:
+      - "db"
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root098
+      MYSQL_DATABASE: jongtas
+      MYSQL_USER: jongtas
+      MYSQL_PASSWORD: jongtas098
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - web-dev-data:/var/lib/mysql
+      - ./database/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - 3307:3306
+    expose:
+      - 3307
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "5173:5173"
+    volumes:
+      - "./frontend:/frontend"
+      - "/frontend/node_modules"
+volumes:
+  web-dev-data:
+    driver: local

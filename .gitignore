@@ -1,0 +1,27 @@
+# Windows のシステムファイル
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# エディタ・IDE の設定ファイル
+.vscode/
+*.suo
+*.user
+*.sln.doc
+*.obj
+*.exe
+*.pdb
+
+# ビルド生成物・キャッシュ
+**/bin/
+**/obj/
+*.log
+*.tmp
+*.bak
+
+# Node.js / npm (Node.jsプロジェクトの場合)
+node_modules/
+npm-debug.log
+
+# 環境ファイル
+.env*
