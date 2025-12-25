@@ -7,5 +7,5 @@ import (
 )
 
 type LoginRepository interface {
-	GetLoginUser(ctx context.Context, query string) ([]*model.Login, error)
+	GetLoginUser(ctx context.Context, query string) ([]*model.LoginUserReq, error)
 }
