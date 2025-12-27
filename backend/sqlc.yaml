@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - schema: "sqlc/schema.sql"
+    queries: "sqlc/query.sql"
+    engine: "mysql"
+    gen:
+      go:
+        package: "database"
+        out: "infrastructure/persistence/database"
+        sql_package: "database/sql"
+        emit_json_tags: true

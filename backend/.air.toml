@@ -16,6 +16,8 @@ tmp_dir = "tmp"
   stop_on_error = false
   # ログに色をつける
   log = "build-errors.log"
+  # ファイルポーチング設定
+  poll = true
 
 [log]
   # タイムスタンプを表示
