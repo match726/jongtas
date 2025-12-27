@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HelpCircle, LogIn, LogOut, Menu, Settings } from 'lucide-react';
+import { HelpCircle, LogIn, LogOut, Menu, Settings, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -9,23 +9,24 @@ import {
   SheetDescription,
   SheetContent,
   SheetTrigger } from '@/components/ui/sheet';
-import { useLoginUser } from '@/features/login/hooks/useLoginUser';
+import { useAccount } from '@/features/account/hooks/useAccount';
 
 export function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // ログイン判定、ユーザー情報取得
-  const context = useLoginUser();
-  if (!context) throw new Error("LoginUserContextが設定されていません。");
-  const { loginUser } = context;
+  const context = useAccount();
+  if (!context) throw new Error("AccountContextが設定されていません。");
+  const { account } = context;
 
-  const menuItems = [
-    { name: "ヘルプ", icon: HelpCircle, href: "/help" },
-    { name: "設定", icon: Settings, href: "/settings" },
-    { name: loginUser.id === 0 ? "ログイン" : "ログアウト",
-      icon: loginUser.id === 0 ? LogIn : LogOut,
-      href: loginUser.id === 0 ? "/login" : "/logout", },
-  ]
+  const menuItems = account.authority === 0
+    ? [{ name: "ヘルプ", icon: HelpCircle, href: "/help" },
+      { name: "設定", icon: Settings, href: "/settings" },
+      { name: "アカウント作成", icon: UserPlus, href: "/signup" },
+      { name: "ログイン", icon: LogIn, href: "/login" },]
+    : [{ name: "ヘルプ", icon: HelpCircle, href: "/help" },
+      { name: "設定", icon: Settings, href: "/settings" },
+      { name: "ログイン", icon: LogIn, href: "/login" },]
 
   return (
     <header className="border-b border-border bg-card sticky top-0 z-50">

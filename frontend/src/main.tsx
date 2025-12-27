@@ -2,15 +2,15 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';
 import './index.css'
-import { LoginUserProvider } from '@/features/login/contexts/LoginUserContext';
+import { AccountProvider } from '@/features/account/contexts/AccountContext';
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <LoginUserProvider>
+    <AccountProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </LoginUserProvider>
+    </AccountProvider>
   </StrictMode>,
 );

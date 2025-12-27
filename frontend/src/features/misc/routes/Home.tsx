@@ -3,22 +3,20 @@ import { LayoutGrid, Settings, Users, Shuffle, BarChart3, Plus } from 'lucide-re
 import { Header } from '@/components/header';
 import { FunctionCard } from '@/components/function-card';
 
-const API_URL = import.meta.env.VITE_APP_BACKEND_URL + "/hello";
-
 export function Home() {
 
   const [message, setMessage] = useState('接続中...');
 
   useEffect(() => {
     // バックエンドのAPIを叩く
-    fetch(API_URL)
+    fetch(import.meta.env.VITE_APP_BACKEND_URL + '/hello')
       .then(res => res.json())
       .then(data => setMessage(data.message))
       .catch(err => {
         console.error(err)
         setMessage('接続エラーが発生しました')
       })
-  }, [])
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

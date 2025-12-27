@@ -8,26 +8,29 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useLoginUser } from '@/features/login/hooks/useLoginUser';
+import { useAccount } from '@/features/account/hooks/useAccount';
 
 // 半角英数字と記号の正規表現
 const alphanumericAndSymbols = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
 
 // Zodスキーマの定義
 const formSchema = z.object({
-  userid: z
+  accountid: z
     .string()
-    .min(1, 'ユーザーIDは必須入力です。')
+    .min(1, 'アカウントIDは必須入力です。')
     .regex(alphanumericAndSymbols, '半角英数字と記号のみ使用可能です。'),
+  nickname: z
+    .string()
+    .min(1, '表示名は必須入力です。'),
   password: z
     .string()
     .min(8, 'パスワードは8文字以上で入力してください。')
     .regex(alphanumericAndSymbols, '半角英数字と記号のみ使用可能です。'),
 });
 
-export function Login() {
+export function Signup() {
 
-  const { setLoginUser } = useLoginUser();
+  const { setAccount } = useAccount();
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +39,8 @@ export function Login() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userid: "",
+      accountid: "",
+      nickname: "",
       password: "",
     },
   });
@@ -48,7 +52,7 @@ export function Login() {
 
     try {
       // Goバックエンドへのリクエスト
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch(import.meta.env.VITE_APP_BACKEND_URL + '/signup', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,18 +60,19 @@ export function Login() {
         body: JSON.stringify(values),
       })
 
-      const data = await response.json()
+      const data = await response.json();
 
+      console.log(data)
       if (!response.ok) {
-        setError("ログインに失敗しました。");
+        setError("アカウント作成に失敗しました。");
       } else {
-        setLoginUser(data);
-        navigate("/");
+        setAccount(data);
+        navigate('/');
       }
     } catch (error: any) {
       setError("エラーが発生しました。");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -77,7 +82,7 @@ export function Login() {
       <div className="flex items-center justify-center">
         <Card className="w-[350px] md:w-[50%]">
           <CardHeader>
-            <CardTitle className="text-2xl">ログイン</CardTitle>
+            <CardTitle className="text-2xl">新規登録</CardTitle>
           </CardHeader>
           {error && <p className="text-sm text-red-500 px-6">{error}</p>}
           <CardContent>
@@ -85,12 +90,26 @@ export function Login() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="userid"
+                  name="accountid"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ユーザーID</FormLabel>
+                      <FormLabel>アカウントID</FormLabel>
                       <FormControl>
                         <Input placeholder="admin@jongtas" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="nickname"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>表示名</FormLabel>
+                      <FormControl>
+                        <Input placeholder="ジャンタス" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -104,7 +123,7 @@ export function Login() {
                     <FormItem>
                       <FormLabel>パスワード</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="******" {...field} />
+                        <Input type="password" placeholder="********" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -115,10 +134,10 @@ export function Login() {
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                      ログイン中...
+                      アカウント作成中...
                     </div>
                   ) : (
-                    "ログイン"
+                    "アカウント登録"
                   )}
                 </Button>
               </form>
